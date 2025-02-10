@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
+import dogGif from './assets/images/dog.gif';
 
-function App() {
-  const [count, setCount] = useState(0)
+function Counter() {
+  const [count, setCount] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const darkModePreference = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setIsDarkMode(darkModePreference);
+  }, []);
+
+  const handleAdd = () => {
+    setCount(count + 1);
+    toast.success('Number increased!', { position: "top-right", autoClose: 1500 });
+  };
+
+  const handleRemove = () => {
+    setCount(count - 1);
+    toast.warn('Number decreased!', { position: "top-right", autoClose: 1500 });
+  };
+
+  const handleReset = () => {
+    setCount(0);
+    toast.info('Counter reset!', { position: "top-right", autoClose: 1500 });
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className={`card ${isDarkMode ? 'dark' : ''}`}>
+      <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'orange' }}>Current Count: {count}</p>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+        <button className="btn" style={{ backgroundColor: 'green', color: 'white' }} onClick={handleAdd}>Add</button>
+        <button className="btn" style={{ backgroundColor: 'red', color: 'white' }} onClick={handleRemove}>Remove</button>
+        <button className="btn reset" style={{ backgroundColor: 'blue', color: 'white' }} onClick={handleReset}>Reset</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <> 
+      <div>
+        <img src={dogGif} className="logo" alt="Dog gif" style={{ width: '300px', height: '300px' }} />
+      </div>
+      <Counter />
+      <p className="read-the-docs">Press any button to add, remove, and to reset the counter.</p>
+      <ToastContainer transition={Slide} theme="colored" />
+    </>
+  );
+}
+
+export default App;
